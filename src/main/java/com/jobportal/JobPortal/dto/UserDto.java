@@ -1,0 +1,37 @@
+package com.jobportal.JobPortal.dto;
+
+import com.jobportal.JobPortal.entity.User;
+
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDto {
+
+     private Long id;
+
+    @NotBlank(message="{user.name.absent}")
+    private String name;
+
+    @Column(unique = true)
+    @NotBlank(message="{user.email.absent}")
+    @Email(message="{user.email.invalid}")
+    private String email;
+
+    @NotBlank(message="{user.password.absent}")
+    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$",message="{user.password.invalid}")
+    private String password;
+
+    private AccountType accountType;
+
+    public User toEntity(){
+         return new User(this.id,this.name,this.email,this.password, this.accountType);
+    }
+}
