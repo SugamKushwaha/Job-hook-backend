@@ -1,21 +1,25 @@
 package com.jobportal.JobPortal.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jobportal.JobPortal.dto.LoginDto;
+import com.jobportal.JobPortal.dto.ResponseDto;
 import com.jobportal.JobPortal.dto.UserDto;
 import com.jobportal.JobPortal.entity.OTP;
 import com.jobportal.JobPortal.entity.User;
 import com.jobportal.JobPortal.exception.JobPortalException;
 import com.jobportal.JobPortal.repository.OTPRepository;
 import com.jobportal.JobPortal.repository.UserRepository;
+import com.jobportal.JobPortal.utility.Data;
 import com.jobportal.JobPortal.utility.Utilitties;
 
 import jakarta.mail.internet.MimeMessage;
@@ -73,8 +77,39 @@ public class UserServiceImpl implements UserService {
          OTP otp = new OTP(email, genOtp, LocalDateTime.now());
 
          otpRepository.save(otp);
-         message.setText("Your Code is :"+genOtp,false);
+         message.setText(Data.getMessageBody(genOtp),true);
+         mailSender.send(mm);
+         return true;
+    }
+
+    @Override
+    public Boolean verifyOtp(String email,String otp) throws JobPortalException {
+       OTP otpEntity = otpRepository.findById(email).orElseThrow(()->new JobPortalException("OTP_NOT_FOUND"));
+       if(!otpEntity.getOtpCode().equals(otp))throw new JobPortalException("OTP_INCORRECT");
+
+       return true;
+    }
+
+    @Override
+    public ResponseDto changePassword(LoginDto loginDto) throws JobPortalException {
+         User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->new JobPortalException("USER_NOT_FOUND"));
+         user.setPassword(passwordEncoder.encode(loginDto.getPassword()));
+         userRepository.save(user);
          
+         return new ResponseDto("Password changed Successfully");
+
+    }
+
+    @Scheduled(fixedRate=60000)
+    public void removeExpiredOTPs(){
+        LocalDateTime expiry = LocalDateTime.now().minusMinutes(5);
+
+        List<OTP> expiredOtps=otpRepository.findByCreationTimeBefore(expiry);
+        
+        if(!expiredOtps.isEmpty()){
+            otpRepository.deleteAll(expiredOtps);
+            System.out.println("Removed"+expiredOtps.size()+"expired OTPS");
+        }
     }
 
     
