@@ -1,0 +1,38 @@
+package com.jobportal.JobPortal.dto;
+
+import java.util.List;
+
+import com.jobportal.JobPortal.entity.Profile;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProfileDto {
+
+     private Long id;
+
+    private String email;
+
+    private String jobTitle;
+
+    private String company;
+
+    private String location;
+
+    private String about;
+
+    private List<String> skills;
+
+    private List<Experience> experience;
+
+    private List<Certification> certification;
+
+    public Profile toEntity(){
+        return new Profile(id, email, jobTitle, company, location, about, skills, experience, certification);
+    }
+    
+}

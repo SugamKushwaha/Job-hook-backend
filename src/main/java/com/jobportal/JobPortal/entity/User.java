@@ -37,7 +37,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
+    private Long profileId;
+
     public UserDto toDto(){
-        return new UserDto(this.id,this.name,this.email,this.password, this.accountType);
+        return new UserDto(id, name, email, password, accountType, profileId);
     }
 }
