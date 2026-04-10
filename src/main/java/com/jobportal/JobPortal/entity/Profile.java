@@ -1,5 +1,6 @@
 package com.jobportal.JobPortal.entity;
 
+import java.util.Base64;
 import java.util.List;
 
 import com.jobportal.JobPortal.dto.Certification;
@@ -11,7 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,11 @@ public class Profile {
 
     private String about;
 
+   @Lob
+    private byte[] image;
+
+    
+
     @ElementCollection
     private List<String> skills;
 
@@ -48,7 +54,7 @@ public class Profile {
     private List<Certification> certification;
 
     public ProfileDto tDto(){
-        return new ProfileDto(id, email, jobTitle, company, location, about, skills, experience, certification);
+        return new ProfileDto(id, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification);
     }
     
 }

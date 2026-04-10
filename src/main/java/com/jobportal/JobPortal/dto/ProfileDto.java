@@ -1,5 +1,6 @@
 package com.jobportal.JobPortal.dto;
 
+import java.util.Base64;
 import java.util.List;
 
 import com.jobportal.JobPortal.entity.Profile;
@@ -25,6 +26,8 @@ public class ProfileDto {
 
     private String about;
 
+    private String image;
+
     private List<String> skills;
 
     private List<Experience> experience;
@@ -32,7 +35,8 @@ public class ProfileDto {
     private List<Certification> certification;
 
     public Profile toEntity(){
-        return new Profile(id, email, jobTitle, company, location, about, skills, experience, certification);
+        return new Profile(id, email, jobTitle, company, location, about, image != null ? Base64.getDecoder().decode(this.image): null, skills, experience, certification);
     }
     
 }
+ 

@@ -1,0 +1,41 @@
+package com.jobportal.JobPortal.entity;
+
+import java.time.LocalDateTime;
+import java.util.Base64;
+
+import com.jobportal.JobPortal.dto.ApplicantDTO;
+import com.jobportal.JobPortal.dto.ApplicationStatus;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Applicant {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long applicantId;
+
+    private String name;
+    private String email;
+    private Long phone;
+    private String website;
+    private byte[] resume;
+    private String coverLetter;
+
+    private LocalDateTime timeStamp;
+
+    private ApplicationStatus applicationStatus;
+
+    public ApplicantDTO toDTO(){
+      return new ApplicantDTO(applicantId, name, email, phone, website, resume!=null?Base64.getEncoder().encodeToString(this.resume):null, coverLetter, timeStamp, applicationStatus);
+    }
+}
