@@ -27,8 +27,10 @@ public class ApplicantDTO {
 
     private ApplicationStatus applicationStatus;
 
+    private LocalDateTime interviewTime;
+
     public Applicant toEntity(){
-        return new Applicant(applicantId, name, email, phone, website, resume!=null?Base64.getDecoder().decode(this.resume):null, coverLetter, timeStamp, applicationStatus);
+        return new Applicant(applicantId, name, email, phone, website, resume!=null?Base64.getDecoder().decode(this.resume):null, coverLetter, timeStamp, applicationStatus,interviewTime);
     }
     
 }

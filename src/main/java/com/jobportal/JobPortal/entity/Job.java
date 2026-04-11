@@ -60,6 +60,8 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobStatus jobStatus;
 
+    private Long postedBy;
+
    public Job(String jobTitle,
            String company,
            List<Applicant> applicants,
@@ -71,7 +73,8 @@ public class Job {
            LocalDateTime postTime,
            String description,
            List<String> skillsRequired,
-           JobStatus jobStatus) {
+           JobStatus jobStatus,
+            Long postedBy) {
 
     this.jobTitle = jobTitle;
     this.company = company;
@@ -85,12 +88,13 @@ public class Job {
     this.description = description;
     this.skillsRequired = skillsRequired;
     this.jobStatus = jobStatus;
+    this.postedBy=postedBy;
 }
 
    
 
     public JobDTO toDTO(){
-        return new JobDTO(id, jobTitle, company,  applicants!=null?this.applicants.stream().map((x)->x.toDTO()).toList():null, about, experience, jobType, location, packageOffered, postTime, description, skillsRequired, jobStatus);
+        return new JobDTO(id, jobTitle, company,  applicants!=null?this.applicants.stream().map((x)->x.toDTO()).toList():null, about, experience, jobType, location, packageOffered, postTime, description, skillsRequired, jobStatus,postedBy);
     }
 
     

@@ -34,8 +34,10 @@ public class ProfileDto {
 
     private List<Certification> certification;
 
+    private List<Long> savedJobs;
+
     public Profile toEntity(){
-        return new Profile(id, email, jobTitle, company, location, about, image != null ? Base64.getDecoder().decode(this.image): null, skills, experience, certification);
+        return new Profile(id, email, jobTitle, company, location, about, image != null ? Base64.getDecoder().decode(this.image): null, skills, experience, certification,savedJobs);
     }
     
 }

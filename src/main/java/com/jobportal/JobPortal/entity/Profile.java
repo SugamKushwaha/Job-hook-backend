@@ -7,11 +7,13 @@ import com.jobportal.JobPortal.dto.Certification;
 import com.jobportal.JobPortal.dto.Experience;
 import com.jobportal.JobPortal.dto.ProfileDto;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -53,8 +55,12 @@ public class Profile {
     @ElementCollection
     private List<Certification> certification;
 
+    @ElementCollection
+    @CollectionTable(name = "saved_jobs", joinColumns = @JoinColumn(name = "profile_id"))
+    private List<Long>savedJobs;
+
     public ProfileDto tDto(){
-        return new ProfileDto(id, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification);
+        return new ProfileDto(id, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification,savedJobs);
     }
     
 }

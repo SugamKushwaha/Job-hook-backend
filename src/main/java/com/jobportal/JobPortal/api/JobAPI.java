@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobportal.JobPortal.dto.ApplicantDTO;
+import com.jobportal.JobPortal.dto.Application;
 import com.jobportal.JobPortal.dto.JobDTO;
 import com.jobportal.JobPortal.dto.ResponseDto;
 import com.jobportal.JobPortal.exception.JobPortalException;
@@ -53,4 +54,16 @@ public class JobAPI {
     }
 
 
+   @GetMapping("/postedBy/{id}")
+    public ResponseEntity<List<JobDTO>> getJobPostedBy(@PathVariable Long id)throws  JobPortalException{
+         return  new ResponseEntity<>(jobService.getJobsPostedBy(id),HttpStatus.OK);
+ }
+
+ @PostMapping("/changeAppStatus")
+    public ResponseEntity<ResponseDto> changeStatus(@RequestBody Application application) throws JobPortalException {
+
+        jobService.changeAppStatus(application);
+
+        return new ResponseEntity<>(new ResponseDto("Application status updated successfully"), HttpStatus.OK);
+    }
 }
