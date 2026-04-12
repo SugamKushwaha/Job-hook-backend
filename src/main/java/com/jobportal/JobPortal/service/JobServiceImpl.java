@@ -11,6 +11,7 @@ import com.jobportal.JobPortal.dto.ApplicantDTO;
 import com.jobportal.JobPortal.dto.Application;
 import com.jobportal.JobPortal.dto.ApplicationStatus;
 import com.jobportal.JobPortal.dto.JobDTO;
+import com.jobportal.JobPortal.dto.JobStatus;
 import com.jobportal.JobPortal.entity.Applicant;
 import com.jobportal.JobPortal.entity.Job;
 import com.jobportal.JobPortal.exception.JobPortalException;
@@ -23,7 +24,13 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobDTO postJob(JobDTO jobDTO) throws  JobPortalException {
-         jobDTO.setPostTime(LocalDateTime.now());
+         if(jobDTO.getId()==null){
+            jobDTO.setPostTime(LocalDateTime.now());
+         }else{
+            Job job= jobRepository.findById(jobDTO.getId()).orElseThrow(()->new JobPortalException("JOB_NOT_FOUND"));
+            
+            if(job.getJobStatus().equals(JobStatus.DRAFT)|| jobDTO.getJobStatus().equals(JobStatus.CLOSED))jobDTO.setPostTime(LocalDateTime.now());
+         }
          return jobRepository.save(jobDTO.toEntity()).toDTO();
     }
 
@@ -43,7 +50,7 @@ public class JobServiceImpl implements JobService {
 
        List<Applicant> applicants = job.getApplicants();
        if(applicants==null)applicants= new ArrayList<>();
-       if(applicants.stream().filter((x)->x.getApplicantId()==applicantDTO.getApplicantId()).toList().size()>0) throw new JobPortalException("JOB_APPLIED_ALREADY");
+       if(applicants.stream().filter((x)->x.getApplicantId().equals(applicantDTO.getApplicantId())).toList().size()>0) throw new JobPortalException("JOB_APPLIED_ALREADY");
 
        applicantDTO.setApplicationStatus(ApplicationStatus.APPLIED);
        applicants.add(applicantDTO.toEntity());
@@ -61,7 +68,7 @@ public class JobServiceImpl implements JobService {
         Job job = jobRepository.findById(application.getId()).orElseThrow(()->new JobPortalException("JOB_NOT_FOUND"));
 
         List<Applicant>applicants=job.getApplicants().stream().map((x)->{
-            if(application.getApplicationId()==x.getApplicantId()){
+            if(application.getApplicationId().equals(x.getApplicantId())){
                 x.setApplicationStatus(application.getApplicationStatus());
                 if(application.getApplicationStatus().equals(ApplicationStatus.INTERVIEWING))x.setInterviewTime(application.getInterviewTime());
             }

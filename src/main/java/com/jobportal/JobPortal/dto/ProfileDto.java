@@ -16,6 +16,8 @@ public class ProfileDto {
 
      private Long id;
 
+    private String name;
+
     private String email;
 
     private String jobTitle;
@@ -37,7 +39,7 @@ public class ProfileDto {
     private List<Long> savedJobs;
 
     public Profile toEntity(){
-        return new Profile(id, email, jobTitle, company, location, about, image != null ? Base64.getDecoder().decode(this.image): null, skills, experience, certification,savedJobs);
+        return new Profile(id,name, email, jobTitle, company, location, about, image != null ? Base64.getDecoder().decode(this.image): null, skills, experience, certification,savedJobs);
     }
     
 }

@@ -31,6 +31,8 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     private String email;
 
     private String jobTitle;
@@ -60,7 +62,7 @@ public class Profile {
     private List<Long>savedJobs;
 
     public ProfileDto tDto(){
-        return new ProfileDto(id, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification,savedJobs);
+        return new ProfileDto(id,name, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification,savedJobs);
     }
     
 }

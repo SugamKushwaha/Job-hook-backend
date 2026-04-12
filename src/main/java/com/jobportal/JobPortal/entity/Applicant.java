@@ -9,6 +9,8 @@ import com.jobportal.JobPortal.dto.ApplicantDTO;
 import com.jobportal.JobPortal.dto.ApplicationStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +41,7 @@ public class Applicant {
     @CreationTimestamp
     private LocalDateTime timeStamp;
 
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
     private LocalDateTime interviewTime;
 

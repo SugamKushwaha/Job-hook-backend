@@ -30,7 +30,21 @@ public class ApplicantDTO {
     private LocalDateTime interviewTime;
 
     public Applicant toEntity(){
-        return new Applicant(applicantId, name, email, phone, website, resume!=null?Base64.getDecoder().decode(this.resume):null, coverLetter, timeStamp, applicationStatus,interviewTime);
-    }
+    Applicant applicant = new Applicant();
+
+    applicant.setName(name);
+    applicant.setEmail(email);
+    applicant.setPhone(phone);
+    applicant.setWebsite(website);
+    applicant.setResume(resume != null ? Base64.getDecoder().decode(this.resume) : null);
+    applicant.setCoverLetter(coverLetter);
+    applicant.setApplicationStatus(applicationStatus);
+    applicant.setInterviewTime(interviewTime);
+
+    // ❌ DO NOT SET ID
+
+    return applicant;
+}
     
 }
+
