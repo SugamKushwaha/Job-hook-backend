@@ -46,7 +46,7 @@ public class Profile {
    @Lob
     private byte[] image;
 
-    
+    private Long totalExp;
 
     @ElementCollection
     private List<String> skills;
@@ -62,7 +62,7 @@ public class Profile {
     private List<Long>savedJobs;
 
     public ProfileDto tDto(){
-        return new ProfileDto(id,name, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null, skills, experience, certification,savedJobs);
+        return new ProfileDto(id,name, email, jobTitle, company, location, about, image!=null?Base64.getEncoder().encodeToString(this.image):null,totalExp, skills, experience, certification,savedJobs);
     }
     
 }
