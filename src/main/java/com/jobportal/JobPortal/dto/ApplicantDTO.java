@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class ApplicantDTO {
 
     private Long applicantId;
+    private Long userId;
 
     private String name;
     private String email;
@@ -32,6 +33,7 @@ public class ApplicantDTO {
     public Applicant toEntity(){
     Applicant applicant = new Applicant();
 
+    applicant.setUserId(userId);
     applicant.setName(name);
     applicant.setEmail(email);
     applicant.setPhone(phone);

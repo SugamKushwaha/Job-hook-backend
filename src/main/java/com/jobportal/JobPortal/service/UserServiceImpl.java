@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jobportal.JobPortal.dto.LoginDto;
+import com.jobportal.JobPortal.dto.NotificationDto;
 import com.jobportal.JobPortal.dto.ResponseDto;
 import com.jobportal.JobPortal.dto.UserDto;
 import com.jobportal.JobPortal.entity.OTP;
@@ -42,6 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     
     @Override
@@ -99,6 +103,14 @@ public class UserServiceImpl implements UserService {
          User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->new JobPortalException("USER_NOT_FOUND"));
          user.setPassword(passwordEncoder.encode(loginDto.getPassword()));
          userRepository.save(user);
+ 
+         NotificationDto noti = new NotificationDto();
+         noti.setUserId(user.getId());
+         noti.setMessage("Password Reset Successfull");
+         noti.setAction("Password Reset");
+
+         notificationService.sendNotification(noti);
+         
          
          return new ResponseDto("Password changed Successfully");
 
@@ -114,6 +126,12 @@ public class UserServiceImpl implements UserService {
             otpRepository.deleteAll(expiredOtps);
             System.out.println("Removed"+expiredOtps.size()+"expired OTPS");
         }
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) throws JobPortalException {
+        
+        return  userRepository.findByEmail(email).orElseThrow(()->new JobPortalException("USER_NOT_FOUND")).toDto();
     }
 
     

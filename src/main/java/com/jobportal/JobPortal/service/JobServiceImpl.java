@@ -12,6 +12,7 @@ import com.jobportal.JobPortal.dto.Application;
 import com.jobportal.JobPortal.dto.ApplicationStatus;
 import com.jobportal.JobPortal.dto.JobDTO;
 import com.jobportal.JobPortal.dto.JobStatus;
+import com.jobportal.JobPortal.dto.NotificationDto;
 import com.jobportal.JobPortal.entity.Applicant;
 import com.jobportal.JobPortal.entity.Job;
 import com.jobportal.JobPortal.exception.JobPortalException;
@@ -20,12 +21,23 @@ import com.jobportal.JobPortal.repository.JobRepository;
 @Service
 public class JobServiceImpl implements JobService {
     
-    @Autowired private JobRepository jobRepository;
+    @Autowired 
+    private JobRepository jobRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public JobDTO postJob(JobDTO jobDTO) throws  JobPortalException {
          if(jobDTO.getId()==null){
             jobDTO.setPostTime(LocalDateTime.now());
+            NotificationDto notiDto = new NotificationDto();
+                notiDto.setAction("Job Posted");
+                notiDto.setMessage("Job Posted Successfully for " + jobDTO.getJobTitle() + " at "+ jobDTO.getCompany());
+                notiDto.setUserId(jobDTO.getPostedBy());
+                
+                notiDto.setRoute("/posted-job/"+jobDTO.getId());
+                notificationService.sendNotification(notiDto);
          }else{
             Job job= jobRepository.findById(jobDTO.getId()).orElseThrow(()->new JobPortalException("JOB_NOT_FOUND"));
             
@@ -71,6 +83,14 @@ public class JobServiceImpl implements JobService {
             if(application.getApplicationId().equals(x.getApplicantId())){
                 x.setApplicationStatus(application.getApplicationStatus());
                 if(application.getApplicationStatus().equals(ApplicationStatus.INTERVIEWING))x.setInterviewTime(application.getInterviewTime());
+                NotificationDto notiDto = new NotificationDto();
+                notiDto.setAction("Interview Schedule");
+                notiDto.setMessage("Interview scheduled for job id: " + application.getId());
+                notiDto.setUserId(application.getApplicationId());
+                
+                notiDto.setRoute("/job-history");
+                  notificationService.sendNotification(notiDto);
+
             }
             return x;
         }).toList();

@@ -6,12 +6,13 @@ import com.jobportal.JobPortal.dto.ResponseDto;
 import com.jobportal.JobPortal.dto.UserDto;
 import com.jobportal.JobPortal.exception.JobPortalException;
 
-import jakarta.validation.Valid;
 
 
 public interface UserService {
     
     public UserDto registerUser(UserDto userDto);
+
+    public UserDto getUserByEmail(String email) throws JobPortalException;
 
     public UserDto loginUser(LoginDto loginDto)throws JobPortalException;
 

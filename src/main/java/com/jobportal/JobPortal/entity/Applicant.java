@@ -29,10 +29,14 @@ public class Applicant {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long applicantId;
 
+    private Long userId;
+
     private String name;
     private String email;
     private Long phone;
     private String website;
+
+    
 
     @Lob
     private byte[] resume;
@@ -46,6 +50,6 @@ public class Applicant {
     private LocalDateTime interviewTime;
 
     public ApplicantDTO toDTO(){
-      return new ApplicantDTO(applicantId, name, email, phone, website, resume!=null?Base64.getEncoder().encodeToString(this.resume):null, coverLetter, timeStamp, applicationStatus,interviewTime);
+      return new ApplicantDTO(applicantId,userId, name, email, phone, website, resume!=null?Base64.getEncoder().encodeToString(this.resume):null, coverLetter, timeStamp, applicationStatus,interviewTime);
     }
 }
